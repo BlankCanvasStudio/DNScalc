@@ -407,6 +407,8 @@ class Collector:
         self.local_addr = str(local_addr)
 
     def run(self, datafile, savefile = 'trial.res'):
+        lines_length = 20 if self.mode == 'tcp' else 15
+        
         cmd = '#!/bin/bash\n' + \
             'cmd="dnsperf -S ' + self.stats + ' ' + \
                     '-s ' + self.server_ip + ' ' + \
@@ -419,7 +421,7 @@ class Collector:
                     '-c ' + self.clients + ' ' + \
                     '-T ' + self.threads + ' ' + \
                     '"; \n' + \
-                    'eval $cmd | tail -20 >> "' + str(savefile) + '";'
+                    'eval $cmd | tail -' + str(lines_length) + '' >> "' + str(savefile) + '";'
         
         # Write to file and make it exe cause life is annoying
         f = open('tmp.sh', 'a')
