@@ -1,8 +1,15 @@
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except Exception:
+    print('Could not import matplotlib. Plotting functions will not be available')
 from scipy.stats import f_oneway
 import numpy as np
 import os, scipy, math, stat, subprocess
-import scikit_posthocs as sp
+
+try:
+    import scikit_posthocs as sp
+except Exception:
+    print('Could not import scikit_posthocs. Data analysis will not be available')
 
 
 class DataPoint:
