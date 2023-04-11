@@ -408,6 +408,7 @@ class Collector:
 
     def run(self, datafile, savefile = 'trial.res'):
         cmd = '#!/bin/bash\n' + \
+            'echo "----------" >> ' + str(savefile) + ";\n" \
             'cmd="dnsperf -S ' + self.stats + ' ' + \
                     '-s ' + self.server_ip + ' ' + \
                     '-m ' + self.mode + ' ' + \
@@ -419,7 +420,7 @@ class Collector:
                     '-c ' + self.clients + ' ' + \
                     '-T ' + self.threads + ' ' + \
                     '"; \n' + \
-                    'eval $cmd | tail -20 >> "' + str(savefile) + '";'
+                    'eval $cmd | tail -25 >> "' + str(savefile) + '";'
         
         # Write to file and make it exe cause life is annoying
         f = open('tmp.sh', 'a')
