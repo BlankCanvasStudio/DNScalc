@@ -419,7 +419,7 @@ class Collector:
                     '-c ' + self.clients + ' ' + \
                     '-T ' + self.threads + ' ' + \
                     '"; \n' + \
-                    'eval $cmd | tail -2 >> "' + str(savefile) + '";'
+                    'eval $cmd | tail -20 >> "' + str(savefile) + '";'
         
         # Write to file and make it exe cause life is annoying
         f = open('tmp.sh', 'a')
