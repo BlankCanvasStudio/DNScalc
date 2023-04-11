@@ -407,7 +407,7 @@ class Collector:
         self.local_addr = str(local_addr)
 
     def run(self, datafile, savefile = 'trial.res'):
-        lines_length = 20 if self.mode == 'tcp' else 15
+        lines_length = 20 if self.mode == 'tcp' else 13
         
         cmd = '#!/bin/bash\n' + \
             'cmd="dnsperf -S ' + self.stats + ' ' + \
