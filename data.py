@@ -41,7 +41,7 @@ class FileReader:
 
     def read_data_point(self):
 
-        line = self.fd.readline()
+        line = self.fd.readline()   # Read a blank line
         if not line: return False   # if the file is empty return false
 
         self.queries_sent += [ int(self.fd.readline().split(':')[1]) ]
