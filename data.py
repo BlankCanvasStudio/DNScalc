@@ -74,10 +74,8 @@ class FileReader:
             self.connection_avg_latency += [ float(self.fd.readline().split()[3]) ]
             self.connection_std_latency += [ float(self.fd.readline().split()[3]) ]
 
-            self.fd.readline() # read blank line
-
-
-        self.fd.readline() # read command line
+        self.fd.readline() # read blank line
+        self.fd.readline() # read blank line
 
         return True
 
