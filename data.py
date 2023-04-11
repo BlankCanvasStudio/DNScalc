@@ -44,7 +44,7 @@ class FileReader:
         line = self.fd.readline()
         if not line: return False   # if the file is empty return false
 
-        self.queries_sent += [ int(line.split(':')[1]) ]
+        self.queries_sent += [ int(self.fd.readline().split(':')[1]) ]
         self.queries_completed += [ int(self.fd.readline().split()[2]) ]
         self.queries_lost += [ int(self.fd.readline().split()[2]) ]
 
