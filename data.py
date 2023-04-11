@@ -60,10 +60,10 @@ class FileReader:
         self.avg_latency += [ float(self.fd.readline().split()[3]) ]
         self.std_latency += [ float(self.fd.readline().split()[3]) ]
 
-        self.fd.readline() # read blank line
-
-
         if self.isTCP:
+
+            self.fd.readline() # read blank line
+
             self.fd.readline() # read Conection Statitics header
             self.fd.readline() # read blank line
 
@@ -75,7 +75,7 @@ class FileReader:
             self.connection_std_latency += [ float(self.fd.readline().split()[3]) ]
 
         self.fd.readline() # read blank line
-        self.fd.readline() # read blank line
+        # self.fd.readline() # read blank line
 
         return True
 
