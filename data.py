@@ -2,14 +2,24 @@ try:
     import matplotlib.pyplot as plt
 except Exception:
     print('Could not import matplotlib. Plotting functions will not be available')
-from scipy.stats import f_oneway
-import numpy as np
-import os, scipy, math, stat, subprocess
+
+try:
+    from scipy.stats import f_oneway
+    import scipy
+except:
+    print("Could not import scipy. Data analysis will not be available")    
+
+try:
+    import numpy as np
+except:
+    print("Could not import numpy. Data analysis will not be available")
 
 try:
     import scikit_posthocs as sp
 except Exception:
     print('Could not import scikit_posthocs. Data analysis will not be available')
+
+import os, math, stat, subprocess
 
 
 class DataPoint:
@@ -427,7 +437,6 @@ class Collector:
         f.close()
         st = os.stat('./tmp.sh')
         os.chmod('./tmp.sh', st.st_mode | stat.S_IEXEC)
-        print('running command:\n', cmd)
         for i in range(0, int(self.num_tests)):
             process = subprocess.Popen('./tmp.sh', stdout=subprocess.PIPE)
             output, error = process.communicate()
