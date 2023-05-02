@@ -101,27 +101,35 @@ class FileReader:
 
     def avg(self, metric):
         if metric == 'sent':
+            if len(self.queries_sent) is 0: return 0
             return sum(self.queries_sent) / len(self.queries_sent)
 
         elif metric == 'completed':
+            if len(self.queries_completed) is 0: return 0
             return sum(self.queries_completed) / len(self.queries_completed)
         
         elif metric == 'lost':
+            if len(self.queries_lost) is 0: return 0
             return sum(self.queries_lost) / len(self.queries_lost)
         
         elif metric == 'qps':
+            if len(self.queries_per_sec) is 0: return 0
             return sum(self.queries_per_sec) / len(self.queries_per_sec)
         
         elif metric == 'latency':
+            if len(self.avg_latency) is 0: return 0
             return sum(self.avg_latency) / len(self.avg_latency)
         
         elif metric == 'std':
+            if len(self.std_latency) is 0: return 0
             return sum(self.std_latency) / len(self.std_latency)
         
         elif metric == 'conn latency':
+            if len(self.connection_avg_latency) is 0: return 0
             return sum(self.connection_avg_latency) / len(self.connection_avg_latency)
         
         elif metric == 'conn std':
+            if len(self.connection_std_latency) is 0: return 0
             return sum(self.connection_std_latency) / len(self.connection_std_latency)
         
         else:
