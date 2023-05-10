@@ -50,42 +50,45 @@ class FileReader:
 
 
     def read_data_point(self):
+        try:
+            line = self.fd.readline()   # Read a blank line
+            if not line: return False   # if the file is empty return false
+            self.queries_sent += [ int(self.fd.readline().split(':')[1]) ]
+            self.queries_completed += [ int(self.fd.readline().split()[2]) ]
+            self.queries_lost += [ int(self.fd.readline().split()[2]) ]
 
-        line = self.fd.readline()   # Read a blank line
-        if not line: return False   # if the file is empty return false
+            self.fd.readline() # read blank line
+            self.fd.readline() # read response codes line
+            self.fd.readline() # read avg packet size
+            self.fd.readline() # read run time
 
-        self.queries_sent += [ int(self.fd.readline().split(':')[1]) ]
-        self.queries_completed += [ int(self.fd.readline().split()[2]) ]
-        self.queries_lost += [ int(self.fd.readline().split()[2]) ]
-
-        self.fd.readline() # read blank line
-        self.fd.readline() # read response codes line
-        self.fd.readline() # read avg packet size
-        self.fd.readline() # read run time
-
-        self.queries_per_sec += [ float(self.fd.readline().split()[3]) ]
-
-        self.fd.readline() # read blank line
-
-        self.avg_latency += [ float(self.fd.readline().split()[3]) ]
-        self.std_latency += [ float(self.fd.readline().split()[3]) ]
-
-        if self.isTCP:
+            self.queries_per_sec += [ float(self.fd.readline().split()[3]) ]
 
             self.fd.readline() # read blank line
 
-            self.fd.readline() # read Conection Statitics header
-            self.fd.readline() # read blank line
+            self.avg_latency += [ float(self.fd.readline().split()[3]) ]
+            self.std_latency += [ float(self.fd.readline().split()[3]) ]
 
-            self.reconnections += [ int(self.fd.readline().split()[1]) ]
+            if self.isTCP:
+
+                self.fd.readline() # read blank line
+
+                self.fd.readline() # read Conection Statitics header
+                self.fd.readline() # read blank line
+
+                self.reconnections += [ int(self.fd.readline().split()[1]) ]
+
+                self.fd.readline() # read blank line
+            
+                self.connection_avg_latency += [ float(self.fd.readline().split()[3]) ]
+                self.connection_std_latency += [ float(self.fd.readline().split()[3]) ]
 
             self.fd.readline() # read blank line
+            # self.fd.readline() # read blank line
         
-            self.connection_avg_latency += [ float(self.fd.readline().split()[3]) ]
-            self.connection_std_latency += [ float(self.fd.readline().split()[3]) ]
+        except Exception as e:
+            print("Error loading file: ", self.filename)
 
-        self.fd.readline() # read blank line
-        # self.fd.readline() # read blank line
 
         return True
 
@@ -93,43 +96,46 @@ class FileReader:
 
     def read(self, filename = None):
         if filename is None: filename = self.filename
-        
+       
+        index = 0
         while self.read_data_point():
+            index += 1
+            print('reading data point: ', index)
             continue
 
 
 
     def avg(self, metric):
         if metric == 'sent':
-            if len(self.queries_sent) is 0: return 0
+            if len(self.queries_sent) == 0: return 0
             return sum(self.queries_sent) / len(self.queries_sent)
 
         elif metric == 'completed':
-            if len(self.queries_completed) is 0: return 0
+            if len(self.queries_completed) == 0: return 0
             return sum(self.queries_completed) / len(self.queries_completed)
         
         elif metric == 'lost':
-            if len(self.queries_lost) is 0: return 0
+            if len(self.queries_lost) == 0: return 0
             return sum(self.queries_lost) / len(self.queries_lost)
         
         elif metric == 'qps':
-            if len(self.queries_per_sec) is 0: return 0
+            if len(self.queries_per_sec) == 0: return 0
             return sum(self.queries_per_sec) / len(self.queries_per_sec)
         
         elif metric == 'latency':
-            if len(self.avg_latency) is 0: return 0
+            if len(self.avg_latency) == 0: return 0
             return sum(self.avg_latency) / len(self.avg_latency)
         
         elif metric == 'std':
-            if len(self.std_latency) is 0: return 0
+            if len(self.std_latency) == 0: return 0
             return sum(self.std_latency) / len(self.std_latency)
         
         elif metric == 'conn latency':
-            if len(self.connection_avg_latency) is 0: return 0
+            if len(self.connection_avg_latency) == 0: return 0
             return sum(self.connection_avg_latency) / len(self.connection_avg_latency)
         
         elif metric == 'conn std':
-            if len(self.connection_std_latency) is 0: return 0
+            if len(self.connection_std_latency) == 0: return 0
             return sum(self.connection_std_latency) / len(self.connection_std_latency)
         
         else:
@@ -167,7 +173,14 @@ class TrialEvaluator:
         if type(files) is not list: files = [ files ]
         self.filenames = files
         self.isTCP = isTCP
-        self.readers = [ FileReader(name, self.isTCP) for name in self.filenames ]
+        self.readers = []
+        for name in self.filenames:
+            try:
+                self.readers += [ FileReader(name, self.isTCP) ]
+            except Exception as e:
+                print('Failed to read file: ', name)
+                raise e
+        # self.readers = [ FileReader(name, self.isTCP) for name in self.filenames ]
 
 
 
