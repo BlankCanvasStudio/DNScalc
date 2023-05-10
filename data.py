@@ -97,10 +97,7 @@ class FileReader:
     def read(self, filename = None):
         if filename is None: filename = self.filename
        
-        index = 0
         while self.read_data_point():
-            index += 1
-            print('reading data point: ', index)
             continue
 
 
